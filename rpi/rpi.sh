@@ -1,6 +1,8 @@
 #!/bin/bash
 IP0='192.168.43.254';
 IP1='192.168.1.2';
+NET0='43.168.192';
+NET1='88.168.192';
 function logerror(){
 	printf "\e[1;31m[ FAIL ]\e[0m %s\n" "$@" >&2;
 }
@@ -13,11 +15,11 @@ function get_remote(){
 		loginfo $wlan' network'
 	fi
 	case $wlan in
-		43.168.192*)
+		$NET0*)
 			echo "$IP0";
 			return 0;
 			;;
-		1.168.192*)
+		$NET1*)
 			echo "$IP1";
 			return 0;
 			;;
@@ -31,14 +33,14 @@ remote=`get_remote`
 # CATCH ERROR 1
 #===============================
 if [[ $? -gt 0 ]];then
-	logerror 'wlan0 is inactive';
-	return 1;
+	logerror 'Network not registered';
+	exit 1;
 fi
 
 if `echo "$@"|grep -q sftp`;then
 	loginfo "SFTP @$PWD";
 	sftp pi@$remote;
-	return $?;
+	exit $?;
 fi
 
 # $0 sudo pam_tally2 --user
