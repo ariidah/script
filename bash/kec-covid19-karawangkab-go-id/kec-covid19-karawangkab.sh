@@ -25,7 +25,7 @@
 #===============================
 
 # format bisa TAB, CSV atau custom (isi sendiri)
-format='CSV';
+format='TAB';
 
 # kecamatan bisa diubah, CASE SENSITIVE.
 kecamatan='KOTA BARU';
@@ -81,22 +81,22 @@ if `echo $1|grep -q -i 'debug'`;then
 else
 	buffer=`$curl "$url"`;
 fi
+printf "URL\t%s\n" "$url" >&2;
 
 # s/[^a-zA-Z0-9/ <>!_-]//g;    -< remove character else
-# s/> />/g;                    -< '...> DATA' to '...>DATA'
-# s/ </</g;                    -< 'DATA <...' to 'DATA<...'
-# s/<[^>]*>/$separator/g;      -< <...>DATA<...><...>DATA<...> to 'DATA(separator)[0-9]'
+# s/>\( \)*/>/g;               -< '...> DATA' to '...>DATA'
+# s/\( \)*</</g;               -< 'DATA <...' to 'DATA<...'
+# s/<[^>]*>/$separator/g;      -< <...>DATA<...><...>DATA<...> to 'DATA(separator)DATA'
 # s/$separator\1\+/$separator  -< remove duplicate separator
 # s/^$separator//g             -< ^(separator)DATA to ^DATA
 # s/$separator$//g             -< DATA(separator)$ to DATA$
-# s/ $separator//g             -< '(separator) DATA' to '(separator)DATA'
-# s/$separator //g             -< 'DATA(separator) ' to 'DATA(separator)'
 function cleanview(){
-	echo "$@"|sed "s/[^a-zA-Z0-9/ <>!_-]//g;s/> />/g;s/ </</g;s/<[^>]*>/$separator/g;s/\($separator\)\1\+/\1/g;s/^$separator//g;s/$separator$//g;s/$separator /$separator/g;s/ $separator/$separator/g";
+	echo "$@"|sed "s/[^a-zA-Z0-9/ <>!_-]//g;s/>\( \)*/>/g;s/\( \)*</</g;s/<[^>]*>/$separator/g;s/\($separator\)\1\+/\1/g;s/^$separator//g;s/$separator$//g;"
 	return 0;
 }
+
 report_date=$(cleanview `printf '%s' "$buffer"|sed -n "/$last_update_begin/p"|sed "s/$last_update_begin//g"`);
-printf '%s' "Tanggal$separator" >&2;
+printf "DD MMM YYYY$separator" >&2;
 cleanview `printf '%s' "$buffer"|sed -n "/$begin_header/,/$endof_header/p"|sed -n "/$begin_data_header/,/$endof_data_header/p"|tr -d '\n'` >&2;
-printf '%s' "$report_date$separator";
+printf "$report_date$separator";
 cleanview `printf '%s' "$buffer"|sed -n "/$begin_data_kecamatan/,/$endof_data_kecamatan/p"|tr -d '\n'`;
