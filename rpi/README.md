@@ -1,4 +1,5 @@
 #rpi.sh
+
 Saya gunakan untuk koneksi ssh (shell, sftp dan metode oneliner) dari ponsel ke raspberry pi, disesuaikan untuk koneksi over LAN maupun WLAN (tethering android) silahkan menyesuaikan variabel IP0,IP1,NET0,NET1 dan case wlan. Untuk mempersingkat waktu buat mengetik command.
 
 Normal
