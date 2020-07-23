@@ -28,8 +28,11 @@
 format='TAB';
 
 # kecamatan bisa diubah, untuk semua isi 'ALL' CASE SENSITIVE.
-kecamatan='KOTA BARU';
-#kecamatan='ALL';
+#kecamatan='KOTA BARU';
+kecamatan='ALL';
+
+# timestamp saat dieksekusi
+timestamp=`date +%F\+%T@%s`;
 
 # variabel yang bisa diubah tanpa mengubah fungsi script berakhir di sini.
 #===============================
@@ -114,6 +117,6 @@ function cleanview(){
 
 # s/\([a-zA-Z ]*\)$separator\(.*\)/\2$separator\1/g  -< $1:$* to $*:$1
 report_date=$(cleanview `printf '%s' "$buffer"|sed -n "/$last_update_begin/p"|sed "s/$last_update_begin//g"`);
-printf "$report_date\n";
+printf "$report_date\texec-on:$timestamp\n";
 cleanview `printf '%s' "$buffer"|sed -n "/$begin_header/,/$endof_header/p"|sed -n "/$begin_data_header/,/$endof_data_header/p"|tr -d '\n'`|sed "s/\([a-zA-Z ]*\)$separator\(.*\)/\2$separator\1/g"; >&2;
 cleanview `printf '%s' "$buffer"|sed -n "/$begin_data/,/$endof_data/p"|tr -d '\n'`|sed "s/\([a-zA-Z ]*\)$separator\(.*\)/\2$separator\1/g";
