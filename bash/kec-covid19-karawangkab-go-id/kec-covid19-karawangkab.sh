@@ -3,24 +3,6 @@
 # author @ariidah (https://github.com/ariidah)
 # writen using vi or vim
 
-# README
-# Saya tidak bertanggung jawab atas kerugian apapun yang mungkin ditimbulkan script ini, gunakan dengan bijak.
-
-# Script ini digunakan untuk fetching (kurang lebih seperti itu) data dari situs tertentu lalu diparsing
-# agar bisa diexport dalam format tertentu (tab, csv atau custom) dari halaman utama
-# https://covid19.karawangkab.go.id sehingga mengurangi proses block-copy-paste terutama di ponsel Android.
-
-# Script ini menggunakan bahasa shell (BASH) sehingga bisa dijalankan pada Terminal
-# (Linux, MAC, Windows (apabila support BASH) maupun Android (menggunakan Termux)).
-# pastikan binary `curl` sudah tersedia, cek dengan cara `which curl`
-
-# Script ini hanya melakukan parsing
-# sangat rentan terhadap perubahan innerHTML, perubahan baris HTML bisa membuat script ini tidak berfungsi.
-
-# Gunakan argument 'debug' untuk MODE DEBUG
-# Perilaku 'MODE DEBUG' apabila ada file index.html lanjutkan eksekusi
-# bila tidak ada, download terlebih dahulu lokasi url lalu save ke file index.html
-
 # variabel yang bisa diubah tanpa mengubah fungsi script dimulai di sini.
 #===============================
 
@@ -37,10 +19,17 @@ timestamp=`date +%F\+%T@%s`;
 # variabel yang bisa diubah tanpa mengubah fungsi script berakhir di sini.
 #===============================
 
+which curl >/dev/null;
+while [[ $? -gt 0 ]];do
+	printf "%s\n" "Instalasi paket curl, pastikan Internet aktif [dibutuhkan, otomatis]";
+	pkg install -y curl;
+done
+
 # opsi 'curl -k' terima insecure SSL certificate
 curl='curl -k -L -s';
 url='https://covid19.karawangkab.go.id';
 last_update_begin='Update terakhir Tanggal';
+tabs 12
 case $kecamatan in
 	all|ALL)
 		begin_data='tbody';
