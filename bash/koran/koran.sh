@@ -52,7 +52,7 @@ import_jQuery(){
 	jQuery_file='jquery.min.js'
 	jQuery_url='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
 	while [[ ! -f "$jQuery_file" ]];do
-		wget "jQuery_url";
+		wget "$jQuery_url";
 	done
 	echo "<script type='text/javascript'>"
 	cat "$jQuery_file";
